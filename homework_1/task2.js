@@ -3,7 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const csvtojson = require('csvtojson');
 const csvFilePath = path.join(__dirname + '/csv/nodejs-hw1-ex1.csv');
-const { parserParams } = require('./utils');
+
+const parserParams = {
+	delimiter: [';', ','],
+	headers: ['book', 'author', 'amount', 'price'],
+	ignoreColumns: /(amount)/,
+	colParser: {
+		price: 'number',
+	},
+};
 
 try {
 	csvtojson(parserParams)

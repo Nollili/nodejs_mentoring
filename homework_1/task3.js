@@ -3,8 +3,15 @@ import path from 'path';
 import csvtojson from 'csvtojson';
 import fs from 'fs';
 const csvFilePath = path.join(__dirname + '/csv/nodejs-hw1-ex1.csv');
-import { parserParams } from './utils';
 
+const parserParams = {
+	delimiter: [';', ','],
+	headers: ['book', 'author', 'amount', 'price'],
+	ignoreColumns: /(amount)/,
+	colParser: {
+		price: 'number',
+	},
+};
 
 try {
 	csvtojson(parserParams)
@@ -14,7 +21,7 @@ try {
 				.map((elem) => '\n' + JSON.stringify(elem))
 				.toString()
 				.replace(/},/g, '}');
-			  fs.writeFileSync(path.join(__dirname + '/csv/text_task1.3.txt'), items);
+			fs.writeFileSync(path.join(__dirname + '/csv/text_task1.3.txt'), items);
 		});
 } catch (error) {
 	console.log(error);
