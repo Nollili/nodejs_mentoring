@@ -2,9 +2,11 @@
 const fs = require('fs');
 const path = require('path');
 const csvtojson = require('csvtojson');
-const csvFilePath = path.join(__dirname + '/csv/nodejs-hw1-ex1.csv');
 
-// add createReadStream createWriteStream
+const csvFilePath = path.join(__dirname + '/csv/nodejs-hw1-ex1.csv');
+const outputTextPath = path.join(__dirname + '/csv/text_task1.2.txt');
+const readStream = new fs.ReadStream(csvFilePath);
+const writeStream = new fs.WriteStream(outputTextPath);
 
 const parserParams = {
 	delimiter: [';', ','],
@@ -16,15 +18,7 @@ const parserParams = {
 };
 
 try {
-	csvtojson(parserParams)
-		.fromFile(csvFilePath)
-		.then((jsonObj) => {
-			const items = jsonObj
-				.map((elem) => '\n' + JSON.stringify(elem))
-				.toString()
-				.replace(/},/g, '}');
-			fs.writeFileSync(path.join(__dirname + '/csv/text_task1.2.txt'), items);
-		});
+	readStream.pipe(csvtojson(parserParams)).pipe(writeStream);
 } catch (error) {
 	console.log(error);
 }

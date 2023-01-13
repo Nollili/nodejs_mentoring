@@ -1,6 +1,3 @@
 {
-  "watch": "js, ts",
-  "ext": ".ts,.js",
-  "ignore": [],
-  "exec": "npx ts-node ./homework_2/task1.ts"
+  "ext": "js, ts"
 }

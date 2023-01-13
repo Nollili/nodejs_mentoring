@@ -2,6 +2,7 @@
   "name": "nodejs_mentoring",
   "version": "1.0.0",
   "description": "for nodejs mentoring homeworks",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "task_1": "npx nodemon ./homework_1/task1.ts",
