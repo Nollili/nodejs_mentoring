@@ -4,6 +4,8 @@ const path = require('path');
 const csvtojson = require('csvtojson');
 const csvFilePath = path.join(__dirname + '/csv/nodejs-hw1-ex1.csv');
 
+// add createReadStream createWriteStream
+
 const parserParams = {
 	delimiter: [';', ','],
 	headers: ['book', 'author', 'amount', 'price'],

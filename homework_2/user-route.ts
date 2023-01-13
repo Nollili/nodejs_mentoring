@@ -1,45 +1,29 @@
-const express = require('express');
-const Joi = require('joi');
-const { v4: uuidv4 } = require('uuid');
+import express, { Request, Response, NextFunction } from "express";
+import Joi from 'joi';
+import { v4 as uuidv4 } from 'uuid';
+import validateSchema from './utils'
 
 const userRouter = express.Router();
 
-const errorResponse = (schemaErrors) => {
-	const errors = schemaErrors.map(({ path, message }) => {
-		return { path, message };
-	});
-
-	return {
-		status: 'Failed',
-		errors,
-	};
-};
-
-const validateSchema = (schema) => {
-	return (req, res, next) => {
-		const { error } = schema.validate(req.body, {
-			abortEarly: true,
-			allowUnknow: false,
-		});
-
-		if (error && error.isJoi) {
-			return res.status(400).json(errorResponse(error.details));
-		}
-		next();
-	};
+type User = {
+  id: string;
+  login: string;
+  password: string;
+  age: number;
+  isDeleted: boolean;
 };
 
 const userSchema = Joi.object().keys({
-	id: Joi.number().required(),
+	id: Joi.string().required(),
 	login: Joi.string().alphanum().min(3).max(30).required(),
 	password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 	age: Joi.number().integer().min(4).max(130).required(),
 	isDeleted: Joi.boolean().required(),
 });
 
-const users = [
+let users: Array<User> = [
 	{
-		id: 1,
+		id: "1",
 		login: 'Aaiefnf28',
 		password: 'Pa55word',
 		age: 12,
@@ -62,22 +46,31 @@ const users = [
 ];
 
 const getAutoSuggestUsers = () => {
-	return (req, res) => {
+	return (req: Request, res: Response) => {
 		const { loginsubstring, limit } = req.params;
-
 		const userList = users
 			.filter((user) => user.login.includes(loginsubstring) && !user.isDeleted)
 			.sort((a, b) => a.login.localeCompare(b.login))
-			.slice(0, limit);
+			.slice(0, Number(limit));
 		res.json(userList);
 	};
 };
 
 userRouter.get('/users/:loginsubstring/:limit', getAutoSuggestUsers());
 
+userRouter.post('/users', validateSchema(userSchema), (req, res) => {
+	const user = req.body;
+	users = [...users, user];
+	res.json(users);
+});
+
+userRouter.get('/users', (req, res) =>{
+	res.json(users);
+})
+
 userRouter.get('/users/:id', (req, res) => {
 	const { id } = req.params;
-	const user = users.find((user) => user.id === parseInt(id, 10));
+	const user = users.find((user) => user.id === id);
 	if (user === undefined) {
 		res.status(404).json({ message: `User with id ${id} not found` });
 	} else {
@@ -85,34 +78,33 @@ userRouter.get('/users/:id', (req, res) => {
 	}
 });
 
-userRouter.post('/users', validateSchema(userSchema), (req, res) => {
-	const user = req.body;
-	const newUsers = [...users, user];
-	res.json(newUsers);
-});
-
 userRouter.put('/users', validateSchema(userSchema), (req, res) => {
 	const { id, login, password, age, isDeleted } = req.body;
-	const user = users.find((user) => user.id === parseInt(id, 10));
+	const user = users.find((user) => user.id === id);
+	const index =users.findIndex((user) => user.id === id);
 	if (user === undefined) {
 		res
 			.status(404)
 			.json({ message: `There is no existing user with id ${id}` });
 	} else {
-		const newUser = {
+		const updatedUser = {
 			id: id,
 			login: login === user.login ? user.login : login,
 			password: password === user.password ? user.password : password,
 			age: age === user.age ? user.age : age,
 			isDeleted: isDeleted === user.isDeleted ? user.isDeleted : isDeleted,
 		};
-		res.json(newUser);
+
+		users.splice(index, 1);
+		users.push(updatedUser);
+		console.log(users)
+		res.json(updatedUser);
 	}
 });
 
 userRouter.delete('/users/:id', (req, res) => {
 	const { id } = req.params;
-	const user = users.find((user) => user.id === parseInt(id, 10));
+	const user = users.find((user) => user.id === id);
 
 	if (user === undefined) {
 		res
@@ -124,4 +116,4 @@ userRouter.delete('/users/:id', (req, res) => {
 	}
 });
 
-module.exports = userRouter;
+export default userRouter;

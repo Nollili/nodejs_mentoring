@@ -1,6 +1,6 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const userRouter = require('./user-route.js');
+import express, { Request, Response, NextFunction } from "express";
+import cookieParser from 'cookie-parser';
+import userRouter from './user-route';
 
 const app = express();
 const port = 3000;
@@ -16,7 +16,7 @@ app.use(() => {
 	throw new Error('Error');
 });
 
-app.use(function (err, req, res, next) {
+app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 	console.log(err.stack);
 	res.status(500).send('Something broke');
 	next();
