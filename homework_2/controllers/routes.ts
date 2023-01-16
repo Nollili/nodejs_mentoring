@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 let users: Array<User> = [
 	{
-		id: "1",
+		id: uuidv4(),
 		login: 'Aaiefnf28',
 		password: 'Pa55word',
 		age: 12,
