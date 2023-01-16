@@ -8,7 +8,7 @@
     "task_1": "npx nodemon ./homework_1/task1.ts",
     "task_2": "npx nodemon ./homework_1/task2",
     "task_3": "npx nodemon --exec babel-node ./homework_1/task3",
-    "task_4": "npx nodemon ./homework_2/task1.ts"
+    "task_4": "npx nodemon ./homework_2/app.ts"
   },
   "repository": {
     "type": "git",
