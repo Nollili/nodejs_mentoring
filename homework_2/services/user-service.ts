@@ -3,6 +3,7 @@ import User from "../models/user-model"
 
 const getAutoSuggestUsers = (users: Array<User>) => {
 	return (req: Request, res: Response) => {
+    // select all users then return the filtered ones
 		const { loginsubstring, limit } = req.params;
 		const userList = users
 			.filter((user: User) => user.login.includes(loginsubstring) && !user.isDeleted)
@@ -14,6 +15,7 @@ const getAutoSuggestUsers = (users: Array<User>) => {
 
 const getUserById = (users: Array<User>) => {
   return(req: Request, res: Response) =>{
+    // select users where id === id in the req
 	const { id } = req.params;
 	const user = users.find((user) => user.id === id);
 	if (user === undefined) {
@@ -26,6 +28,7 @@ const getUserById = (users: Array<User>) => {
 
 const createUser = (users: Array<User>) =>{
   return (req: Request, res: Response) => {
+    // get the user from the request then INSERT INTO users
     const user = req.body;
     users = [...users, user];
     res.json(users);
@@ -34,6 +37,7 @@ const createUser = (users: Array<User>) =>{
 
 const updateUser = (users: Array<User>) =>{
   return (req: Request, res: Response) => {
+    // select user by id in request, update it  
     const { id, login, password, age, isDeleted } = req.body;
     const user = users.find((user) => user.id === id);
     const index =users.findIndex((user) => user.id === id);
@@ -59,6 +63,7 @@ const updateUser = (users: Array<User>) =>{
 }
 
 const deleteUser = (users: Array<User>) => {
+  // delete userwhere ID === id
   return (req: Request, res: Response) => {
     const { id } = req.params;
     const user = users.find((user) => user.id === id);
