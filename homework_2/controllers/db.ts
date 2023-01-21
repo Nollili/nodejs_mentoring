@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes, Op } from 'sequelize';
 import User from '../models/user-model'
 const conString =
-	'postgres://qnzwcitq:Ty3WVvLy97PnjBK6sjt1-LJIk2e2oko-@rogue.db.elephantsql.com/qnzwcitq';
+	'connection string';
 
 const sequelize = new Sequelize(conString, {
 	host: 'localhost',
