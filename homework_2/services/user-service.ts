@@ -1,88 +1,66 @@
-import express, { Request, Response, NextFunction } from "express";
-import User from "../models/user-model"
+import { Request, Response } from "express";
+import * as db from '../controllers/db'
 
-const getAutoSuggestUsers = (users: Array<User>) => {
+const getAutoSuggestUsersReq = () => {
 	return (req: Request, res: Response) => {
-    // select all users then return the filtered ones
-		const { loginsubstring, limit } = req.params;
-		const userList = users
-			.filter((user: User) => user.login.includes(loginsubstring) && !user.isDeleted)
-			.sort((a: User, b: User) => a.login.localeCompare(b.login))
-			.slice(0, Number(limit));
-		res.json(userList);
+        const { loginsubstring, limit } = req.params;
+        db.getAutoSuggestUsers(loginsubstring, limit)
+          .then(users => res.json(users))
+          .catch(error => 
+            res.status(404) 
+              .json({ message: `Username containing ${loginsubstring} not found`, error}))
 	};
 };
 
-const getUserById = (users: Array<User>) => {
+const getUserByIdReq = () => {
   return(req: Request, res: Response) =>{
-    // select users where id === id in the req
-	const { id } = req.params;
-	const user = users.find((user) => user.id === id);
-	if (user === undefined) {
-		res.status(404).json({ message: `User with id ${id} not found` });
-	} else {
-		res.json(user);
-	}
- }
+    const { id } = req.params;
+    db.getUserById(id)
+      .then(user => res.json(user))
+      .catch(error => 
+        res.status(404) 
+          .json({ message: `User with id ${id} not found`, error}))
+  }
 }
 
-const createUser = (users: Array<User>) =>{
+const createUserReq = () => {
   return (req: Request, res: Response) => {
-    // get the user from the request then INSERT INTO users
     const user = req.body;
-    users = [...users, user];
-    res.json(users);
+    console.log(user)
+    db.createUser(user)
+        .then(newUser => res.json(newUser))
+        .catch(error => 
+          res.status(404)
+            .json({message: 'Unable to create user', error}))
   }
 }
 
-const updateUser = (users: Array<User>) =>{
+const updateUserReq = () => {
   return (req: Request, res: Response) => {
-    // select user by id in request, update it  
-    const { id, login, password, age, isDeleted } = req.body;
-    const user = users.find((user) => user.id === id);
-    const index =users.findIndex((user) => user.id === id);
-    if (user === undefined) {
-      res
-        .status(404)
-        .json({ message: `There is no existing user with id ${id}` });
-    } else {
-      const updatedUser = {
-        id: id,
-        login: login === user.login ? user.login : login,
-        password: password === user.password ? user.password : password,
-        age: age === user.age ? user.age : age,
-        isDeleted: isDeleted === user.isDeleted ? user.isDeleted : isDeleted,
-      };
-  
-      users.splice(index, 1);
-      users.push(updatedUser);
-      console.log(users)
-      res.json(updatedUser);
-    }
+    const { id, login, password, age } = req.body;
+    db.updateUser(id, login, password, age)
+        .then( updatedUser => res.json(`User with id ${id} was updated`))
+        .catch(error => 
+            res.status(404)
+               .json({ message: `There is no existing user with id ${id}`, error}));
   }
 }
 
-const deleteUser = (users: Array<User>) => {
-  // delete userwhere ID === id
+const deleteUserReq = () => {
   return (req: Request, res: Response) => {
     const { id } = req.params;
-    const user = users.find((user) => user.id === id);
-  
-    if (user === undefined) {
-      res
-        .status(404)
-        .json({ message: `There is no existing user with id ${id}` });
-    } else {
-      req.body.isDeleted = true;
-      res.json(req.body);
-    }
+    db.deleteUser(id).then(deletedUser => {
+      res.json(`User with id ${id} was deleted`)
+    }).catch( error => 
+      res.status(404)
+         .json({ message: `There is no existing user with id ${id}`, error }))
   }
 }
 
 export {
-  getAutoSuggestUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser
+  getAutoSuggestUsersReq,
+  getUserByIdReq,
+  createUserReq,
+  updateUserReq,
+  deleteUserReq
 }
