@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import * as userService from "../services/user-service"
 import {validateSchema, userSchema} from "../validators/user-validator"
 import * as db from '../controllers/db'
 
 db.connectDb()
-	.then(connected => db.SyncDb())
-	.then(synced => db.setDefaultUsers())
+	.then(() => db.SyncDb())
+	.then(() => db.setDefaultUsers())
 
 const userRouter = express.Router();
 
