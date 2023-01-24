@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import userRouter from './controllers/routes';
+import userRouter from './routes/user-routes';
+import groupRouter from './routes/group-routes';
 import { errorHandler } from "./middlewares/error-handling"
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(userRouter)
+app.use(groupRouter)
 
 app.use(errorHandler())
 app.use(() => {
