@@ -1,8 +1,10 @@
 import { DataTypes, Op } from 'sequelize';
 import User from '../models/user-model'
 import { sequelize } from './db';
+import { Groups } from './group-controller';
 
-const Users = sequelize.define('users', {
+
+const Users = sequelize.define('Users', {
 	id: {
 		type: DataTypes.UUID,
 		primaryKey: true,
@@ -12,6 +14,14 @@ const Users = sequelize.define('users', {
 	password: { type: DataTypes.STRING, allowNull: false },
 	age: { type: DataTypes.INTEGER, allowNull: false },
 });
+
+const addGroupsToUsers = async () => {
+  await Users.hasMany(Groups, {
+      foreignKey: 'id',
+  })
+
+  console.log('addGroupsToUsers  ',await (Users.findAll({include:Groups})))
+}
 
 const SyncUsersDb = async () =>
   await Users
@@ -45,13 +55,13 @@ const createDefaultUsers = async () => {
 };
 
 const getAllUsers = async () => {
-  const numberOfUsers = (await Users.findAll()).length;
+  const numberOfUsers = await Users.findAll();
   return numberOfUsers;
   };
 
 const setDefaultUsers = () => {
   getAllUsers().then(amount => {
-    if(amount === 0){
+    if(amount.length === 0){
       createDefaultUsers()
     }}
   ).catch(err => {console.log(err)})
@@ -105,6 +115,8 @@ const deleteUser = async (id: string) => {
 };
 
 export {
+  Users,
+  addGroupsToUsers,
 	SyncUsersDb,
 	setDefaultUsers,
 	getAllUsers,

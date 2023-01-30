@@ -12,6 +12,18 @@ const getAutoSuggestUsersReq = () => {
 	};
 };
 
+const getAllUsersReq = () => {
+  return(req: Request, res: Response) =>{
+    userController.getAllUsers()
+      .then(users => {
+        console.log(users)
+        res.json(users)})
+      .catch(error => 
+        res.status(404) 
+          .json({ message: `Users not found`, error}))
+  }
+}
+
 const getUserByIdReq = () => {
   return(req: Request, res: Response) =>{
     const { id } = req.params;
@@ -59,6 +71,7 @@ const deleteUserReq = () => {
 
 export {
   getAutoSuggestUsersReq,
+  getAllUsersReq,
   getUserByIdReq,
   createUserReq,
   updateUserReq,

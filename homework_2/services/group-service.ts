@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
 import * as groupController from '../controllers/group-controller'
+import {getUserById, Users} from '../controllers/user-controller'
 
 const getAllGroupsReq = () => {
   return(req: Request, res: Response) =>{
     groupController.getAllGroups()
-      .then(groups => res.json(groups))
+      .then(groups => {
+        console.log(
+          groups
+        )
+        res.json(groups)})
       .catch(error => 
         res.status(404) 
           .json({ message: `Groups not found`, error}))
@@ -56,10 +61,31 @@ const deleteGroupReq = () => {
   }
 }
 
+const addUserToGroup = () => {
+  return async (req: Request, res: Response) => {
+    const groupId = req.params.id;
+    const userId = req.params.addUser;
+
+    const groupToAdd = await groupController.getGroupById(groupId)
+    const userToAdd = await getUserById(userId)
+
+    
+    
+  //  console.log(groupToAdd);
+  //  console.log(userToAdd)
+    res.json({
+      groupToAdd,
+      userToAdd
+    })
+  }
+  
+}
+
 export {
   getAllGroupsReq,
   getGroupByIdReq,
   createGroupReq,
   updateGroupReq,
-  deleteGroupReq
+  deleteGroupReq,
+  addUserToGroup
 }

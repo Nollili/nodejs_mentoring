@@ -1,6 +1,7 @@
 import { DataTypes, Op } from 'sequelize';
 import {Permission, Group} from '../models/group-model'
 import { sequelize } from './db';
+import { Users } from './user-controller';
 
 const Groups = sequelize.define('UserGroup', {
 	id: {
@@ -11,6 +12,14 @@ const Groups = sequelize.define('UserGroup', {
 	name: { type: DataTypes.STRING, allowNull: false },
 	permissions: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: false },
 });
+
+const addUsersToGroups = async () => {
+  await Groups.hasMany(Users,{
+    foreignKey: 'id',
+  })
+
+  console.log('addUsersToGroups  ',await (Groups.findAll({include:Users})))
+}
 
 const SyncGroupsDb = async () =>
   await Groups
@@ -83,7 +92,13 @@ const deleteGroup = async (id: string) => {
   return GroupToDelete;
 };
 
+const addUserToGroup = async (groupId: string, userId: string) =>{
+  
+}
+
 export {
+  Groups,
+  addUsersToGroups,
 	SyncGroupsDb,
 	setDefaultGroups,
 	getAllGroups,

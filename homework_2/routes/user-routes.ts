@@ -5,11 +5,13 @@ import * as userController from "../controllers/user-controller"
 import {connectDb} from "../controllers/db"
 
 connectDb()
+	.then(() => userController.addGroupsToUsers())
 	.then(() => userController.SyncUsersDb())
 	.then(() => userController.setDefaultUsers())
 
 const userRouter = express.Router();
 
+userRouter.get('/users', userService.getAllUsersReq());
 userRouter.get('/users/:loginsubstring/:limit', userService.getAutoSuggestUsersReq());
 userRouter.get('/users/:id', userService.getUserByIdReq());
 userRouter.post('/users', validateSchema(userSchema), userService.createUserReq());
