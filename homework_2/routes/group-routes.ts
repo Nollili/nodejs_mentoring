@@ -1,12 +1,5 @@
 import express from "express";
 import * as groupService from "../services/group-service"
-import * as groupController from '../controllers/group-controller'
-import {connectDb} from "../controllers/db"
-
-connectDb()
-  .then(() => groupController.addUsersToGroups())
-	.then(() => groupController.SyncGroupsDb())
-	.then(() => groupController.setDefaultGroups())
 
 const groupRouter = express.Router();
 

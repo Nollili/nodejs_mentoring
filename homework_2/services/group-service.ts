@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as groupController from '../controllers/group-controller'
-import {getUserById, Users} from '../controllers/user-controller'
+import {getUserById} from '../controllers/user-controller'
 
 const getAllGroupsReq = () => {
   return(req: Request, res: Response) =>{
