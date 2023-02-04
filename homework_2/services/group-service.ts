@@ -74,16 +74,15 @@ const addUserToGroup = () => {
 
     try{
       if(groupToAdd && userToAdd){
-       await userToAdd.addUser(groupToAdd)
+          groupToAdd.belongsTo(userToAdd)
       }
     }catch(e){
       console.log(e);
     }
     
-  // groupToAdd.belongsTo(userToAdd)
   //  console.log(groupToAdd);
   //  console.log(userToAdd)
-    res.json('egg')
+    res.json('something')
   }
   
 }
