@@ -74,7 +74,7 @@ const addUserToGroup = () => {
 
     try{
       if(groupToAdd && userToAdd){
-          groupToAdd.belongsTo(userToAdd)
+         // groupToAdd.belongsTo(userToAdd)
       }
     }catch(e){
       console.log(e);

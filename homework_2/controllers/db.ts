@@ -34,7 +34,7 @@ const Users = sequelize.define('Users', {
 	age: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-const Groups = sequelize.define('UserGroup', {
+const Groups = sequelize.define('Groups', {
 	id: {
 		type: DataTypes.UUID,
 		primaryKey: true,
@@ -44,7 +44,7 @@ const Groups = sequelize.define('UserGroup', {
 	permissions: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: false },
 });
 
-const UsersInGroups = sequelize.define('users_in_groups', {
+const UsersInGroups = sequelize.define('UserGroups', {
 	id:{
 		type: DataTypes.UUID,
 		primaryKey: true,
@@ -53,7 +53,7 @@ const UsersInGroups = sequelize.define('users_in_groups', {
 	UserId: {
 		type: DataTypes.UUID,
 	},
-	UserGroupId: {
+	GroupId: {
 		type: DataTypes.UUID,
 	}
 })
@@ -141,10 +141,10 @@ const setDefaultGroups = () => {
 
 const connectGroupUserTable = async () => {
 	await Users.belongsToMany(Groups, {
-			through: 'users_in_groups',
+			through: 'UserGroups',
 	})
 	await Groups.belongsToMany(Users,{
-		through: 'users_in_groups',
+		through: 'UserGroups',
 	})
 	await Users.hasMany(UsersInGroups)
 	await Groups.hasMany(UsersInGroups)
