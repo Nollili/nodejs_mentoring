@@ -43,10 +43,24 @@ const Groups = sequelize.define('UserGroup', {
 	name: { type: DataTypes.STRING, allowNull: false },
 	permissions: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: false },
 });
+
+const UsersInGroups = sequelize.define('users_in_groups', {
+	id:{
+		type: DataTypes.UUID,
+		primaryKey: true,
+		defaultValue: DataTypes.UUID,
+	},
+	UserId: {
+		type: DataTypes.UUID,
+	},
+	UserGroupId: {
+		type: DataTypes.UUID,
+	}
+})
 		
 const SyncUsersDb = async () =>
 	await Users
-		.sync({ alter: true })
+		.sync({ force: true })
 		.then(() => {
 			console.log('Sync users with DB was successful!');
 		})
@@ -55,10 +69,20 @@ const SyncUsersDb = async () =>
 		});
 
 const SyncGroupsDb = async () =>
-await Groups
-	.sync({ alter: true })
+	await Groups
+		.sync({ force: true })
+		.then(() => {
+			console.log('Sync groups with DB was successful!');
+		})
+		.catch((error) => {
+			console.error('Unable to create table : ', error);
+		});
+
+const SyncUsersInGroupsDb = async () =>
+await UsersInGroups
+	.sync({ force: true })
 	.then(() => {
-		console.log('Sync groups with DB was successful!');
+		console.log('Sync users groups connection DB!');
 	})
 	.catch((error) => {
 		console.error('Unable to create table : ', error);
@@ -115,20 +139,21 @@ const setDefaultGroups = () => {
   ).catch(err => {console.log(err)})
 }
 
-const addGroupsToUsers = async () => {
-	await Users.hasMany(Groups, {
-			foreignKey: 'id',
+const connectGroupUserTable = async () => {
+	await Users.belongsToMany(Groups, {
+			through: 'users_in_groups',
 	})
-
-	console.log('addGroupsToUsers  ',await (Users.findAll({include:Groups})))
-}
-
-const addUsersToGroups = async () => {
-	await Groups.hasMany(Users,{
-		foreignKey: 'id',
+	await Groups.belongsToMany(Users,{
+		through: 'users_in_groups',
 	})
+	await Users.hasMany(UsersInGroups)
+	await Groups.hasMany(UsersInGroups)
+
+	await UsersInGroups.belongsTo(Users)
+	await UsersInGroups.belongsTo(Groups)
 
 	console.log('addUsersToGroups  ',await (Groups.findAll({include:Users})))
+	//console.log('addGroupsToUsers  ',await (Users.findAll({include:Groups})))
 }
 
 export {
@@ -137,8 +162,8 @@ export {
 	Groups,
 	SyncUsersDb,
 	SyncGroupsDb,
+	SyncUsersInGroupsDb,
 	setDefaultUsers,
 	setDefaultGroups,
-	addGroupsToUsers,
-	addUsersToGroups,
+	connectGroupUserTable
 };

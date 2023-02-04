@@ -15,10 +15,10 @@ app.disable('x-powered-by');
 db.connectDb()
 	.then(()=>db.SyncUsersDb())
 	.then(()=>db.SyncGroupsDb())
+	.then(()=> db.SyncUsersInGroupsDb())
 	.then(()=>db.setDefaultUsers())
 	.then(()=>db.setDefaultGroups())
-	.then(()=>db.addGroupsToUsers())
-	.then(()=>db.addUsersToGroups())
+	.then(()=>db.connectGroupUserTable())
 
 app.use(express.json());
 app.use(cookieParser());

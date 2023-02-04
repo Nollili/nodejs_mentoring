@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import * as groupController from '../controllers/group-controller'
 import {getUserById} from '../controllers/user-controller'
+import {Users, Groups } from '../controllers/db'
+import { Group } from "../models/group-model";
+import User from "../models/user-model";
 
 const getAllGroupsReq = () => {
   return(req: Request, res: Response) =>{
@@ -63,20 +66,24 @@ const deleteGroupReq = () => {
 
 const addUserToGroup = () => {
   return async (req: Request, res: Response) => {
-    const groupId = req.params.id;
-    const userId = req.params.addUser;
+    const groupId: string = req.params.id;
+    const userId: string = req.params.addUser;
 
     const groupToAdd = await groupController.getGroupById(groupId)
     const userToAdd = await getUserById(userId)
 
+    try{
+      if(groupToAdd && userToAdd){
+       await userToAdd.addUser(groupToAdd)
+      }
+    }catch(e){
+      console.log(e);
+    }
     
-    
+  // groupToAdd.belongsTo(userToAdd)
   //  console.log(groupToAdd);
   //  console.log(userToAdd)
-    res.json({
-      groupToAdd,
-      userToAdd
-    })
+    res.json('egg')
   }
   
 }
