@@ -6,6 +6,7 @@ module.exports = {
 		es2021: true,
 		node: true,
 	},
+	parser: '@typescript-eslint/parser',
 	extends: 'eslint:recommended',
 	overrides: [],
 	parserOptions: {

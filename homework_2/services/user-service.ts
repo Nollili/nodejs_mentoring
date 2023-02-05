@@ -49,7 +49,7 @@ const updateUserReq = () => {
   return (req: Request, res: Response) => {
     const { id, login, password, age } = req.body;
     userController.updateUser(id, login, password, age)
-        .then( updatedUser => res.json(`User with id ${id} was updated`))
+        .then( () => res.json(`User with id ${id} was updated`))
         .catch(error => 
             res.status(404)
                .json({ message: `There is no existing user with id ${id}`, error}));
@@ -59,7 +59,7 @@ const updateUserReq = () => {
 const deleteUserReq = () => {
   return (req: Request, res: Response) => {
     const { id } = req.params;
-    userController.deleteUser(id).then(deletedUser => {
+    userController.deleteUser(id).then(() => {
       res.json(`User with id ${id} was deleted`)
     }).catch( error => 
       res.status(404)

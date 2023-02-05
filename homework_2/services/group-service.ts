@@ -38,7 +38,7 @@ const updateGroupReq = () => {
   return (req: Request, res: Response) => {
     const { id, name, permissions} = req.body;
     groupController.updateGroup(id, name, permissions)
-        .then( updatedGroup => res.json(`Group with id ${id} was updated`))
+        .then( () => res.json(`Group with id ${id} was updated`))
         .catch(error => 
             res.status(404)
                .json({ message: `There is no existing Group with id ${id}`, error}));
@@ -48,7 +48,7 @@ const updateGroupReq = () => {
 const deleteGroupReq = () => {
   return (req: Request, res: Response) => {
     const { id } = req.params;
-    groupController.deleteGroup(id).then(deletedGroup => {
+    groupController.deleteGroup(id).then(() => {
       res.json(`Group with id ${id} was deleted`)
     }).catch( error => 
       res.status(404)
