@@ -139,31 +139,14 @@ const setDefaultGroups = () => {
   ).catch(err => {console.log(err)})
 }
 
-const connectGroupUserTable = async () => {
-	await Users.belongsToMany(Groups, {
-			through: 'UserGroups',
-	})
-	await Groups.belongsToMany(Users,{
-		through: 'UserGroups',
-	})
-	await Users.hasMany(UsersInGroups)
-	await Groups.hasMany(UsersInGroups)
-
-	await UsersInGroups.belongsTo(Users)
-	await UsersInGroups.belongsTo(Groups)
-
-	console.log('addUsersToGroups  ',await (Groups.findAll({include:Users})))
-	//console.log('addGroupsToUsers  ',await (Users.findAll({include:Groups})))
-}
-
 export {
 	connectDb,
 	Users,
 	Groups,
+	UsersInGroups,
 	SyncUsersDb,
 	SyncGroupsDb,
 	SyncUsersInGroupsDb,
 	setDefaultUsers,
 	setDefaultGroups,
-	connectGroupUserTable
 };

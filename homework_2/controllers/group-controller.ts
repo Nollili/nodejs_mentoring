@@ -1,5 +1,6 @@
+import { v4 as uuidv4 } from 'uuid';
 import {Permission, Group} from '../models/group-model'
-import { Groups } from './db';
+import { Groups, UsersInGroups } from './db';
 
 const getAllGroups = async () => {
   const allGroups = await Groups.findAll();
@@ -25,7 +26,7 @@ const updateGroup = async (id: string, name: string, permissions: Array<Permissi
 
 const createGroup = async (group: Group) => {
   const newGroup = await Groups.create({ 
-    id: group.id,
+    id: uuidv4(),
     name: group.name,
     permissions: group.permissions,
   });
@@ -38,11 +39,23 @@ const deleteGroup = async (id: string) => {
       id: id
     }
   });
+  await UsersInGroups.destroy({
+    where:{
+      GroupId: id
+    }
+  })
   return GroupToDelete;
 };
 
 const addUserToGroup = async (groupId: string, userId: string) =>{
-  
+  console.log(groupId, userId)
+  const newGroup = await UsersInGroups.create({ 
+    id: uuidv4(),
+    UserId: userId,
+    GroupId: groupId,
+  });
+  return newGroup
+
 }
 
 export {
@@ -51,4 +64,5 @@ export {
 	updateGroup,
 	createGroup,
 	deleteGroup,
+  addUserToGroup
 };

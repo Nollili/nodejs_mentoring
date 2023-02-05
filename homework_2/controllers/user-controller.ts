@@ -1,6 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
 import User from '../models/user-model'
-import { Users } from './db';
+import { Users, UsersInGroups } from './db';
 
 const getAllUsers = async () => {
   const numberOfUsers = await Users.findAll();
@@ -37,7 +38,7 @@ const updateUser = async (id: string, login: string, password: string, age: numb
 
 const createUser = async (user: User) => {
   const newUser = await Users.create({ 
-    id: user.id,
+    id: uuidv4(),
     login: user.login,
     password: user.password,
     age: user.age,
@@ -51,6 +52,11 @@ const deleteUser = async (id: string) => {
       id: id
     }
   });
+  await UsersInGroups.destroy({
+    where:{
+      UserId: id
+    }
+  })
   return userToDelete;
 };
 

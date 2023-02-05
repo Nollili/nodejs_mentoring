@@ -18,7 +18,6 @@ db.connectDb()
 	.then(()=> db.SyncUsersInGroupsDb())
 	.then(()=>db.setDefaultUsers())
 	.then(()=>db.setDefaultGroups())
-	.then(()=>db.connectGroupUserTable())
 
 app.use(express.json());
 app.use(cookieParser());

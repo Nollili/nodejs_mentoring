@@ -8,6 +8,6 @@ groupRouter.get('/groups/:id', groupService.getGroupByIdReq());
 groupRouter.post('/groups', groupService.createGroupReq());
 groupRouter.put('/groups', groupService.updateGroupReq());
 groupRouter.delete('/groups/:id', groupService.deleteGroupReq());
-groupRouter.post('/groups/:id/:addUser', groupService.addUserToGroup());
+groupRouter.post('/groups/:groupId/:userId', groupService.addUserToGroupReq());
 
 export default groupRouter;

@@ -16,7 +16,6 @@ const getAllUsersReq = () => {
   return(req: Request, res: Response) =>{
     userController.getAllUsers()
       .then(users => {
-        console.log(users)
         res.json(users)})
       .catch(error => 
         res.status(404) 
@@ -38,7 +37,6 @@ const getUserByIdReq = () => {
 const createUserReq = () => {
   return (req: Request, res: Response) => {
     const user = req.body;
-    console.log(user)
     userController.createUser(user)
         .then(newUser => res.json(newUser))
         .catch(error => 
