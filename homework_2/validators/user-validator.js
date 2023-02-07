@@ -1,7 +1,6 @@
 import Joi from 'joi';
 
 export const userSchema = Joi.object().keys({
-	id: Joi.string().required(),
 	login: Joi.string().alphanum().min(3).max(30).required(),
 	password: Joi.string()
 		.pattern(new RegExp('(?=.*[A-Za-z])(?=.*d)[A-Za-z0-9]{3,30}$'))

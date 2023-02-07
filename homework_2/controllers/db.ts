@@ -1,7 +1,7 @@
-import { Sequelize, DataTypes, Op } from 'sequelize';
-import User from '../models/user-model'
-const conString =
-	'connection string';
+import { DataTypes, Sequelize } from 'sequelize';
+import { getAllGroups } from './group-controller';
+import { getAllUsers } from './user-controller';
+const conString = 'postgres://qnzwcitq:Ty3WVvLy97PnjBK6sjt1-LJIk2e2oko-@rogue.db.elephantsql.com/qnzwcitq';
 
 const sequelize = new Sequelize(conString, {
 	host: 'localhost',
@@ -23,7 +23,7 @@ const connectDb = async () =>
 			console.error('Unable to connect to the database', err);
 		});
 
-const Users = sequelize.define('users', {
+const Users = sequelize.define('Users', {
 	id: {
 		type: DataTypes.UUID,
 		primaryKey: true,
@@ -34,15 +34,59 @@ const Users = sequelize.define('users', {
 	age: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-const SyncDb = async () =>
+const Groups = sequelize.define('Groups', {
+	id: {
+		type: DataTypes.UUID,
+		primaryKey: true,
+		defaultValue: DataTypes.UUID,
+	},
+	name: { type: DataTypes.STRING, allowNull: false },
+	permissions: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: false },
+});
+
+const UsersInGroups = sequelize.define('UserGroups', {
+	id:{
+		type: DataTypes.UUID,
+		primaryKey: true,
+		defaultValue: DataTypes.UUID,
+	},
+	UserId: {
+		type: DataTypes.UUID,
+	},
+	GroupId: {
+		type: DataTypes.UUID,
+	}
+})
+		
+const SyncUsersDb = async () =>
 	await Users
-		.sync({ alter: true })
+		.sync({ force: true })
 		.then(() => {
-			console.log('Sync with DB was successful!');
+			console.log('Sync users with DB was successful!');
 		})
 		.catch((error) => {
 			console.error('Unable to create table : ', error);
 		});
+
+const SyncGroupsDb = async () =>
+	await Groups
+		.sync({ force: true })
+		.then(() => {
+			console.log('Sync groups with DB was successful!');
+		})
+		.catch((error) => {
+			console.error('Unable to create table : ', error);
+		});
+
+const SyncUsersInGroupsDb = async () =>
+await UsersInGroups
+	.sync({ force: true })
+	.then(() => {
+		console.log('Sync users groups connection DB!');
+	})
+	.catch((error) => {
+		console.error('Unable to create table : ', error);
+	});
 
 const createDefaultUsers = async () => {
 	await Users.create({
@@ -65,75 +109,44 @@ const createDefaultUsers = async () => {
 	});
 };
 
-const getAllUsers = async () => {
-	const numberOfUsers = (await Users.findAll()).length;
-	return numberOfUsers;
+const createDefaultGroups = async () => {
+	await Groups.create({
+		id: 'b6892453-1aca-43c5-ab83-7f8937f76598',
+		name: 'First Group',
+		permissions: ['READ', 'SHARE'],
+	});
+	await Groups.create({
+		id: '4b7650e5-42d3-4ade-a95e-f9e14b964fca',
+		name: 'Second Group',
+		permissions: ['WRITE', 'DELETE', 'UPLOAD_FILES'],
+	});
 };
 
 const setDefaultUsers = () => {
-	getAllUsers().then(amount => {
-		if(amount === 0){
-			createDefaultUsers()
-		}}
-	).catch(err => {console.log(err)})
+  getAllUsers().then(amount => {
+    if(amount.length === 0){
+      createDefaultUsers()
+    }}
+  ).catch(err => {console.log(err)})
 }
 
-const getUserById = async (id: string) => {
-	const findById = await Users.findByPk(id);
-	return(findById)
-};
 
-const getAutoSuggestUsers = async (loginsubstring: string, limit: string) => {
-	const foundUsers = await Users.findAll({
-		limit: Number(limit),
-		where: {
-			login: {[Op.iLike]: `%${loginsubstring}%`}
-		},
-	});
-	return foundUsers;
-};
-
-const updateUser = async (id: string, login: string, password: string, age: number) => {
-	const updatedUser = await Users.update({ 
-		login: login,
-		password: password,
-		age: age
-	}, {
-		where: {
-			id: id
-		}
-	});
-	return updatedUser;
-};
-
-const createUser = async (user: User) => {
-	
-	const newUser = await Users.create({ 
-		id: user.id,
-		login: user.login,
-		password: user.password,
-		age: user.age,
-	});
-	return newUser
-};
-
-const deleteUser = async (id: string) => {
-	const userToDelete = await Users.destroy({
-		where:{
-			id: id
-		}
-	});
-	return userToDelete;
-};
+const setDefaultGroups = () => {
+  getAllGroups().then(groups => {
+    if(groups.length === 0){
+      createDefaultGroups()
+    }}
+  ).catch(err => {console.log(err)})
+}
 
 export {
 	connectDb,
-	SyncDb,
+	Users,
+	Groups,
+	UsersInGroups,
+	SyncUsersDb,
+	SyncGroupsDb,
+	SyncUsersInGroupsDb,
 	setDefaultUsers,
-	getAllUsers,
-	getUserById,
-	getAutoSuggestUsers,
-	updateUser,
-	createUser,
-	deleteUser,
+	setDefaultGroups,
 };

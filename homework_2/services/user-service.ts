@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import * as db from '../controllers/db'
+import * as userController from '../controllers/user-controller'
 
 const getAutoSuggestUsersReq = () => {
 	return (req: Request, res: Response) => {
         const { loginsubstring, limit } = req.params;
-        db.getAutoSuggestUsers(loginsubstring, limit)
+        userController.getAutoSuggestUsers(loginsubstring, limit)
           .then(users => res.json(users))
           .catch(error => 
             res.status(404) 
@@ -12,10 +12,21 @@ const getAutoSuggestUsersReq = () => {
 	};
 };
 
+const getAllUsersReq = () => {
+  return(req: Request, res: Response) =>{
+    userController.getAllUsers()
+      .then(users => {
+        res.json(users)})
+      .catch(error => 
+        res.status(404) 
+          .json({ message: `Users not found`, error}))
+  }
+}
+
 const getUserByIdReq = () => {
   return(req: Request, res: Response) =>{
     const { id } = req.params;
-    db.getUserById(id)
+    userController.getUserById(id)
       .then(user => res.json(user))
       .catch(error => 
         res.status(404) 
@@ -26,8 +37,7 @@ const getUserByIdReq = () => {
 const createUserReq = () => {
   return (req: Request, res: Response) => {
     const user = req.body;
-    console.log(user)
-    db.createUser(user)
+    userController.createUser(user)
         .then(newUser => res.json(newUser))
         .catch(error => 
           res.status(404)
@@ -38,8 +48,8 @@ const createUserReq = () => {
 const updateUserReq = () => {
   return (req: Request, res: Response) => {
     const { id, login, password, age } = req.body;
-    db.updateUser(id, login, password, age)
-        .then( updatedUser => res.json(`User with id ${id} was updated`))
+    userController.updateUser(id, login, password, age)
+        .then( () => res.json(`User with id ${id} was updated`))
         .catch(error => 
             res.status(404)
                .json({ message: `There is no existing user with id ${id}`, error}));
@@ -49,7 +59,7 @@ const updateUserReq = () => {
 const deleteUserReq = () => {
   return (req: Request, res: Response) => {
     const { id } = req.params;
-    db.deleteUser(id).then(deletedUser => {
+    userController.deleteUser(id).then(() => {
       res.json(`User with id ${id} was deleted`)
     }).catch( error => 
       res.status(404)
@@ -59,6 +69,7 @@ const deleteUserReq = () => {
 
 export {
   getAutoSuggestUsersReq,
+  getAllUsersReq,
   getUserByIdReq,
   createUserReq,
   updateUserReq,
