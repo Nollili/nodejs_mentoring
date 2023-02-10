@@ -1,7 +1,7 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { getAllGroups } from './group-controller';
 import { getAllUsers } from './user-controller';
-const conString = 'postgres://qnzwcitq:Ty3WVvLy97PnjBK6sjt1-LJIk2e2oko-@rogue.db.elephantsql.com/qnzwcitq';
+const conString = '';
 
 const sequelize = new Sequelize(conString, {
 	host: 'localhost',
@@ -45,7 +45,7 @@ const Groups = sequelize.define('Groups', {
 });
 
 const UsersInGroups = sequelize.define('UserGroups', {
-	id:{
+	id: {
 		type: DataTypes.UUID,
 		primaryKey: true,
 		defaultValue: DataTypes.UUID,
@@ -55,12 +55,11 @@ const UsersInGroups = sequelize.define('UserGroups', {
 	},
 	GroupId: {
 		type: DataTypes.UUID,
-	}
-})
-		
+	},
+});
+
 const SyncUsersDb = async () =>
-	await Users
-		.sync({ force: true })
+	await Users.sync({ force: true })
 		.then(() => {
 			console.log('Sync users with DB was successful!');
 		})
@@ -69,8 +68,7 @@ const SyncUsersDb = async () =>
 		});
 
 const SyncGroupsDb = async () =>
-	await Groups
-		.sync({ force: true })
+	await Groups.sync({ force: true })
 		.then(() => {
 			console.log('Sync groups with DB was successful!');
 		})
@@ -79,14 +77,13 @@ const SyncGroupsDb = async () =>
 		});
 
 const SyncUsersInGroupsDb = async () =>
-await UsersInGroups
-	.sync({ force: true })
-	.then(() => {
-		console.log('Sync users groups connection DB!');
-	})
-	.catch((error) => {
-		console.error('Unable to create table : ', error);
-	});
+	await UsersInGroups.sync({ force: true })
+		.then(() => {
+			console.log('Sync users groups connection DB!');
+		})
+		.catch((error) => {
+			console.error('Unable to create table : ', error);
+		});
 
 const createDefaultUsers = async () => {
 	await Users.create({
@@ -123,21 +120,28 @@ const createDefaultGroups = async () => {
 };
 
 const setDefaultUsers = () => {
-  getAllUsers().then(amount => {
-    if(amount.length === 0){
-      createDefaultUsers()
-    }}
-  ).catch(err => {console.log(err)})
-}
-
+	getAllUsers()
+		.then((amount) => {
+			if (amount.length === 0) {
+				createDefaultUsers();
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};
 
 const setDefaultGroups = () => {
-  getAllGroups().then(groups => {
-    if(groups.length === 0){
-      createDefaultGroups()
-    }}
-  ).catch(err => {console.log(err)})
-}
+	getAllGroups()
+		.then((groups) => {
+			if (groups.length === 0) {
+				createDefaultGroups();
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};
 
 export {
 	connectDb,
