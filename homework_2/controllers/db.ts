@@ -1,7 +1,8 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { getAllGroups } from './group-controller';
 import { getAllUsers } from './user-controller';
-const conString = '';
+const conString =
+	'postgres://qnzwcitq:Ty3WVvLy97PnjBK6sjt1-LJIk2e2oko-@rogue.db.elephantsql.com/qnzwcitq';
 
 const sequelize = new Sequelize(conString, {
 	host: 'localhost',
