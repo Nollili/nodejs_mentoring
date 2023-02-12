@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { Permission } from '../models/group-model';
 
 export const userSchema = Joi.object().keys({
 	login: Joi.string().alphanum().min(3).max(30).required(),
@@ -6,6 +7,11 @@ export const userSchema = Joi.object().keys({
 		.pattern(new RegExp('(?=.*[A-Za-z])(?=.*d)[A-Za-z0-9]{3,30}$'))
 		.required(),
 	age: Joi.number().integer().min(4).max(130).required(),
+});
+
+export const groupSchema = Joi.object().keys({
+	name: Joi.string().alphanum().min(3).max(30).required(),
+	permissions: Permission,
 });
 
 export const validateSchema = (schema) => {
