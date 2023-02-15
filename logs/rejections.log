@@ -1,0 +1,35 @@
+{
+  level: 'error',
+  message: 'uncaughtException: (no error message)\n  No stack trace',
+  metadata: {
+    error: 42,
+    stack: undefined,
+    exception: true,
+    date: 'Wed Feb 15 2023 16:39:34 GMT+0100 (Central European Standard Time)',
+    process: {
+      pid: 6078,
+      uid: 501,
+      gid: 20,
+      cwd: '/Users/Noemi_Verebelyi/Desktop/nodejs_mentoring',
+      execPath: '/usr/local/bin/node',
+      version: 'v16.15.0',
+      argv: [
+        '/Users/Noemi_Verebelyi/Desktop/nodejs_mentoring/node_modules/.bin/ts-node',
+        '/Users/Noemi_Verebelyi/Desktop/nodejs_mentoring/homework_2/app.ts'
+      ],
+      memoryUsage: {
+        rss: 241209344,
+        heapTotal: 156581888,
+        heapUsed: 137186736,
+        external: 6778655,
+        arrayBuffers: 2595076
+      }
+    },
+    os: {
+      loadavg: [ 3.45458984375, 3.80859375, 3.79296875 ],
+      uptime: 203498
+    },
+    trace: [],
+    timestamp: '2023-02-15T15:39:34.598Z'
+  }
+}

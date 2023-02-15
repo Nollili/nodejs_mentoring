@@ -1,4 +1,10 @@
-type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
+enum Permission {
+	'READ',
+	'WRITE',
+	'DELETE',
+	'SHARE',
+	'UPLOAD_FILES',
+}
 
 type Group = {
 	id: string;

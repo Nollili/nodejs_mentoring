@@ -1,6 +1,6 @@
 import express from 'express';
 import * as groupService from '../services/group-service';
-import { validateSchema, groupSchema } from '../validators/user-validator';
+import { validateSchema, groupSchema } from '../validators/validator';
 
 const groupRouter = express.Router();
 

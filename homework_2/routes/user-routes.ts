@@ -1,6 +1,6 @@
 import express from 'express';
 import * as userService from '../services/user-service';
-import { validateSchema, userSchema } from '../validators/user-validator';
+import { validateSchema, userSchema } from '../validators/validator';
 
 const userRouter = express.Router();
 
