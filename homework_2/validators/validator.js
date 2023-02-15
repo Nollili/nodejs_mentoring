@@ -11,7 +11,9 @@ export const userSchema = Joi.object().keys({
 
 export const groupSchema = Joi.object().keys({
 	name: Joi.string().alphanum().min(3).max(30).required(),
-	permissions: Permission,
+	permissions: Joi.array().items(
+		Joi.string().valid(...Object.keys(Permission))
+	),
 });
 
 export const validateSchema = (schema) => {

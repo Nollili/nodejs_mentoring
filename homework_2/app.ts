@@ -30,7 +30,7 @@ createLogger({
 		format.prettyPrint()
 	),
 });
-throw 42;
+
 db.connectDb()
 	.then(() => db.SyncUsersDb())
 	.then(() => db.SyncGroupsDb())
