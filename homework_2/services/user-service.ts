@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as userController from '../controllers/user-controller';
 import { requestErrorLogger, requestLogger } from '../middlewares/loggers';
+import jwt from 'jsonwebtoken';
 
 const getAutoSuggestUsersReq = () => {
 	return (req: Request, res: Response) => {
@@ -78,6 +79,30 @@ const createUserReq = () => {
 	};
 };
 
+const loginUser = () => {
+	return (req: Request, res: Response) => {
+		const user = {
+			id: '16c4f061-b629-4a49-9537-a86a8d8ac5f9',
+			login: 'itsME',
+			password: 'Pa$$word_<>',
+			age: 88,
+			createdAt: '2023-02-28T20:31:22.512Z',
+			updatedAt: '2023-02-28T20:31:22.512Z',
+		};
+		//requestLogger(loginUser.name, [JSON.stringify(user)]);
+
+		try {
+			const accessToken = jwt.sign(
+				user,
+				process.env.ACCESS_TOKEN_SECRET as string
+			);
+			res.json({ accessToken: accessToken });
+		} catch (err) {
+			console.log(err);
+		}
+	};
+};
+
 const updateUserReq = () => {
 	return (req: Request, res: Response) => {
 		const { id, login, password, age } = req.body;
@@ -125,6 +150,7 @@ export {
 	getAllUsersReq,
 	getUserByIdReq,
 	createUserReq,
+	loginUser,
 	updateUserReq,
 	deleteUserReq,
 };

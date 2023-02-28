@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user-routes';
@@ -10,6 +12,8 @@ const port = 3000;
 
 app.set('strict routing', true);
 app.disable('x-powered-by');
+
+console.log(process.env.ACCESS_TOKEN_SECRET);
 
 createLogger({
 	transports: [

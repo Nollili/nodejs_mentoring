@@ -1,7 +1,6 @@
 import express from 'express';
 import * as userService from '../services/user-service';
 import { validateSchema, userSchema } from '../validators/validator';
-
 const userRouter = express.Router();
 
 userRouter.get('/users', userService.getAllUsersReq());
@@ -15,6 +14,7 @@ userRouter.post(
 	validateSchema(userSchema),
 	userService.createUserReq()
 );
+userRouter.post('/userlogin', userService.loginUser());
 userRouter.put(
 	'/users',
 	validateSchema(userSchema),
