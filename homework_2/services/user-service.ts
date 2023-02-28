@@ -81,25 +81,21 @@ const createUserReq = () => {
 
 const loginUser = () => {
 	return (req: Request, res: Response) => {
-		const user = {
-			id: '16c4f061-b629-4a49-9537-a86a8d8ac5f9',
-			login: 'itsME',
-			password: 'Pa$$word_<>',
-			age: 88,
-			createdAt: '2023-02-28T20:31:22.512Z',
-			updatedAt: '2023-02-28T20:31:22.512Z',
-		};
-		//requestLogger(loginUser.name, [JSON.stringify(user)]);
+		requestLogger(loginUser.name, [req.body]);
+		userController.getUserByLogin(req.body.login).then((user) => {
+			const loginDB = user[0].dataValues.login;
+			const passwordDB = user[0].dataValues.password;
 
-		try {
-			const accessToken = jwt.sign(
-				user,
-				process.env.ACCESS_TOKEN_SECRET as string
-			);
-			res.json({ accessToken: accessToken });
-		} catch (err) {
-			console.log(err);
-		}
+			if (req.body.password === passwordDB) {
+				const accessToken = jwt.sign(
+					loginDB,
+					process.env.ACCESS_TOKEN_SECRET as string
+				);
+				if (accessToken) {
+					res.json({ accessToken: accessToken });
+				}
+			}
+		});
 	};
 };
 

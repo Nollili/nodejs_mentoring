@@ -13,8 +13,6 @@ const port = 3000;
 app.set('strict routing', true);
 app.disable('x-powered-by');
 
-console.log(process.env.ACCESS_TOKEN_SECRET);
-
 createLogger({
 	transports: [
 		new transports.Console(),
