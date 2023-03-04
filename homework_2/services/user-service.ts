@@ -81,18 +81,30 @@ const createUserReq = () => {
 
 const loginUser = () => {
 	return (req: Request, res: Response) => {
-		requestLogger(loginUser.name, [req.body]);
+		requestLogger(loginUser.name, [JSON.stringify(req.body)]);
 		userController.getUserByLogin(req.body.login).then((user) => {
-			const loginDB = user[0].dataValues.login;
 			const passwordDB = user[0].dataValues.password;
-
 			if (req.body.password === passwordDB) {
+				const payload = {
+					id: req.body.id,
+					login: req.body.login,
+				};
+
 				const accessToken = jwt.sign(
-					loginDB,
-					process.env.ACCESS_TOKEN_SECRET as string
+					payload,
+					process.env.ACCESS_TOKEN_SECRET as string,
+					{ expiresIn: '1d' }
 				);
 				if (accessToken) {
-					res.json({ accessToken: accessToken });
+					res
+						.cookie('access_token', accessToken, {
+							httpOnly: true,
+						})
+						.status(200)
+						.json({
+							login: req.body.login,
+							accessToken: accessToken,
+						});
 				}
 			}
 		});
