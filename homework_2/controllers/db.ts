@@ -1,10 +1,9 @@
 import { DataTypes, Sequelize } from 'sequelize';
 import { getAllGroups } from './group-controller';
 import { getAllUsers } from './user-controller';
-const conString =
-	'postgres://qnzwcitq:Ty3WVvLy97PnjBK6sjt1-LJIk2e2oko-@rogue.db.elephantsql.com/qnzwcitq';
+const conString = process.env.DB_CONN_STRING;
 
-const sequelize = new Sequelize(conString, {
+const sequelize = new Sequelize(conString as string, {
 	host: 'localhost',
 	dialect: 'postgres',
 	pool: {
