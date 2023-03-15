@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as userController from '../controllers/user-controller';
 import { requestErrorLogger, requestLogger } from '../middlewares/loggers';
+import jwt from 'jsonwebtoken';
 
 const getAutoSuggestUsersReq = () => {
 	return (req: Request, res: Response) => {
@@ -78,6 +79,38 @@ const createUserReq = () => {
 	};
 };
 
+const loginUser = () => {
+	return (req: Request, res: Response) => {
+		requestLogger(loginUser.name, [JSON.stringify(req.body)]);
+		userController.getUserByLogin(req.body.login).then((user) => {
+			const passwordDB = user[0].dataValues.password;
+			if (req.body.password === passwordDB) {
+				const payload = {
+					id: req.body.id,
+					login: req.body.login,
+				};
+
+				const accessToken = jwt.sign(
+					payload,
+					process.env.ACCESS_TOKEN_SECRET as string,
+					{ expiresIn: '1d' }
+				);
+				if (accessToken) {
+					res
+						.cookie('access_token', accessToken, {
+							httpOnly: true,
+						})
+						.status(200)
+						.json({
+							login: req.body.login,
+							accessToken: accessToken,
+						});
+				}
+			}
+		});
+	};
+};
+
 const updateUserReq = () => {
 	return (req: Request, res: Response) => {
 		const { id, login, password, age } = req.body;
@@ -125,6 +158,7 @@ export {
 	getAllUsersReq,
 	getUserByIdReq,
 	createUserReq,
+	loginUser,
 	updateUserReq,
 	deleteUserReq,
 };
