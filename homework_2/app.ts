@@ -57,8 +57,4 @@ process.on(
 );
 
 app.use(errorHandler());
-app.use(() => {
-	throw new Error('Error');
-});
-
 app.listen(port, () => console.log(`server is listening on port ${port}`));
