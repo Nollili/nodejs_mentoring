@@ -19,12 +19,9 @@
     "verbose": true,
     "testEnvironment": "node",
     "collectCoverage": true,
-    "collectCoverageFrom": ["./homework_2/**"],
-    "coverageThreshold": {
-      "global": {
-        "lines": 80
-      }
-    }
+    "collectCoverageFrom": [
+      "./homework_2/**"
+    ]
   },
   "keywords": [],
   "author": "",

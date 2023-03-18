@@ -21,6 +21,7 @@ const getAllGroupsReq = () => {
 
 const getGroupByIdReq = () => {
 	return (req: Request, res: Response) => {
+		console.log(req);
 		const { id } = req.params;
 		requestLogger(getGroupByIdReq.name, [id]);
 
