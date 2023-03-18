@@ -5,6 +5,7 @@ module.exports = {
 		es6: true,
 		es2021: true,
 		node: true,
+		jest: true,
 	},
 	parser: '@typescript-eslint/parser',
 	extends: 'eslint:recommended',
