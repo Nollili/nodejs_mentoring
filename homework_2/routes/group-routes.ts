@@ -6,7 +6,7 @@ import { validateSchema, groupSchema } from '../validators/validator';
 const groupRouter = express.Router();
 
 groupRouter.get('/groups', authLogin, groupService.getAllGroupsReq());
-groupRouter.get('/groups/:id', groupService.getGroupByIdReq());
+groupRouter.get('/groups/:id', authLogin, groupService.getGroupByIdReq());
 groupRouter.post(
 	'/groups',
 	authLogin,
